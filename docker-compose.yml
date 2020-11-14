@@ -1,0 +1,34 @@
+version: '3'
+services: 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: 'nab_test_backend'
+    container_name: 'nab_test_backend'
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      PG_URL: db
+      PG_USER: postgres
+      PG_PASSWORD: SrHbgm2PbLDnXBNN
+      PG_DATABASE: nab_test
+
+    depends_on:
+      - db
+
+  db:
+    image: 'postgres:latest'
+    container_name: 'nab_test_db'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
+      POSTGRES_DB: nab_test
+    ports:
+      - '54320:5432'
+
+volumes:
+  .:
+  node_modules:

@@ -3,3 +3,5 @@ node_modules/
 .vscode
 tmp/
 build/
+package-lock.json
+/tsconfig.json
