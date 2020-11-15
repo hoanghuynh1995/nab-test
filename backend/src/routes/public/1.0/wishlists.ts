@@ -11,6 +11,10 @@ router
     userController.auth,
     wishlistController.getWishlists
   )
+  .get('/:id',
+    userController.auth,
+    wishlistController.getWishlist
+  )
   .post('/',
     validatorController.validate(joiObjs.wishlist.create, 'body'),
     userController.auth,

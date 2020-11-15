@@ -30,6 +30,30 @@ const getWishlists = async (req: Request, res: Response, next: NextFunction): Pr
       offset: (page - 1) * limit,
       limit,
       order: sort,
+    })
+  } catch (err) {
+    const body = base(0, err.message, 0, ERROR_CODES.DB_QUERY)
+    res.send(body)
+    return
+  }
+  const body = base(wishlists)
+  res.send(body)
+}
+
+const getWishlist = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {
+    user
+  } = <IGetWishlistsState>req.state
+  const {
+    id
+  } = req.params
+  let wishlist
+  try {
+    wishlist = await db.Wishlist.findOne({
+      where: {
+        id,
+        user: user.id,
+      },
       include: [{
         model: db.WishlistItem,
         as: 'items',
@@ -41,7 +65,7 @@ const getWishlists = async (req: Request, res: Response, next: NextFunction): Pr
     res.send(body)
     return
   }
-  const body = base(wishlists)
+  const body = base(wishlist)
   res.send(body)
 }
 
@@ -123,6 +147,7 @@ const createWishlistItem = async (req: Request, res: Response, next: NextFunctio
 
 export default {
   getWishlists,
+  getWishlist,
   createWishlist,
   createWishlistItem,
 }
