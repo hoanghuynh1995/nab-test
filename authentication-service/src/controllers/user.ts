@@ -34,14 +34,16 @@ const signup = async (req: Request, res: Response, next: NextFunction): Promise<
   }
   let user
   try {
-    user = await db.User.create(userData)
+    user = await db.User.create(userData, { raw: true })
   } catch (err) {
     const body = base(null, err.message, 0, ERROR_CODES.DB_QUERY)
     next(body)
     return
   }
-  delete user.password
-  res.send(user)
+  res.send(base({
+    ...user.dataValues,
+    password: undefined
+  }))
 }
 
 interface ILoginRequest {
@@ -80,10 +82,10 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   delete user.password
   // generate token
   const token = await utils.auth.generateToken(user)
-  const response = {
+  const response = base({
     ...user,
     token,
-  }
+  })
   res.send(response)
 }
 interface IVerifyTokenRequest {
