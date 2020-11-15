@@ -34,6 +34,9 @@ export const joiObjs = {
       email: Joi.string().email().required(),
       password: Joi.string().required(),
     }),
+    verifyToken: Joi.object({
+      token: Joi.string().required(),
+    }),
   },
 }
 

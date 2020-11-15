@@ -86,8 +86,26 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   }
   res.send(response)
 }
+interface IVerifyTokenRequest {
+  token: string;
+}
+const verifyToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {
+    token,
+  } = <IVerifyTokenRequest>req.body
+  let response
+  try {
+    response = await utils.auth.verifyToken(token)
+  } catch (err) {
+    const body = base(null, 'Invalid token', 0, ERROR_CODES.BAD_REQUEST)
+    res.send(body)
+    return
+  }
+  res.send(response)
+}
 
 export default {
   signup,
   login,
+  verifyToken,
 }

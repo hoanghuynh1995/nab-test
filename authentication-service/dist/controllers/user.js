@@ -80,8 +80,22 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     const response = Object.assign(Object.assign({}, user), { token });
     res.send(response);
 });
+const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { token, } = req.body;
+    let response;
+    try {
+        response = yield utils_1.default.auth.verifyToken(token);
+    }
+    catch (err) {
+        const body = base_1.default(null, 'Invalid token', 0, constants_1.error_codes.BAD_REQUEST);
+        res.send(body);
+        return;
+    }
+    res.send(response);
+});
 exports.default = {
     signup,
     login,
+    verifyToken,
 };
 //# sourceMappingURL=user.js.map

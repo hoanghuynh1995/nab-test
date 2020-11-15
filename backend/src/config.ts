@@ -11,4 +11,9 @@ export default {
     database: process.env.PG_DATABASE,
     port: process.env.PG_PORT,
   },
+  services: {
+    auth: {
+      url: process.env.AUTH_URL,
+    }
+  }
 }

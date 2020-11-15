@@ -38,6 +38,9 @@ exports.joiObjs = {
             email: joi_1.default.string().email().required(),
             password: joi_1.default.string().required(),
         }),
+        verifyToken: joi_1.default.object({
+            token: joi_1.default.string().required(),
+        }),
     },
 };
 exports.default = {
