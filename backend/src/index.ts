@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 
@@ -26,10 +26,14 @@ app.use(
   })
 )
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json({ limit: '100mb' }))
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }))
 
 // setup cors
 app.use(cors())
 app.use('/', routes)
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  res.send(err)
+})
 
 app.listen(port, () => console.log('Started server at port: ' + port))

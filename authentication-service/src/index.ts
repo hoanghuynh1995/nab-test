@@ -33,7 +33,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }))
 app.use(cors())
 app.use('/', routes)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log('ERROR_CALLBACK', err)
   res.send(err)
 })
 

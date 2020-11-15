@@ -5,9 +5,8 @@ import connector from '../connector'
 
 class WishlistItemModel extends Sequelize.Model {
   id?: number;
-  user: string;
-  title: string;
-  fullname: string;
+  wishlist: string;
+  name: string;
 }
 
 WishlistItemModel.init({

@@ -20,6 +20,7 @@ const sequelize = new Sequelize(database, null, null, {
   username: user,
   password,
   port: Number(port),
+  logging: true
 })
 sequelize.authenticate().then(() => {
   console.log('Database connection has been established successfully.')
