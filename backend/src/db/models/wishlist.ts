@@ -36,5 +36,6 @@ WishlistModel.init({
 })
 
 WishlistModel.hasMany(WishListItemModel, { as: 'items', foreignKey: 'wishlist' })
+WishListItemModel.belongsTo(WishlistModel, { foreignKey: 'wishlist' })
 
 export default WishlistModel

@@ -42,6 +42,13 @@ export const joiObjs = {
         name: Joi.string().required(),
       })).required(),
     }),
+    edit: Joi.object({
+      title: Joi.string().required(),
+      description: Joi.string(),
+    }),
+    editItem: Joi.object({
+      name: Joi.string().required(),
+    }),
   },
 }
 

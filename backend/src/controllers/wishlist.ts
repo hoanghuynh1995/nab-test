@@ -145,9 +145,91 @@ const createWishlistItem = async (req: Request, res: Response, next: NextFunctio
   res.send(body)
 }
 
+interface IUpdateWishList {
+  title: string,
+  description?: string,
+}
+const updateWishlist = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {
+    user
+  } = <IGetWishlistsState>req.state
+  const {
+    id
+  } = req.params
+  const {
+    title,
+    description,
+  } = <IUpdateWishList>req.body
+  let updatedWishlist
+  try {
+    const res = await db.Wishlist.update({
+      title,
+      description,
+    }, {
+      where: {
+        id,
+        user: user.id,
+      },
+      returning: true
+    })
+    if (res[0] === 1) updatedWishlist = res[1][0]
+  } catch (err) {
+    const body = base(0, err.message, 0, ERROR_CODES.DB_QUERY)
+    res.send(body)
+    return
+  }
+  const body = base(updatedWishlist)
+  res.send(body)
+}
+
+interface IUpdateWishlistItem {
+  name: string,
+}
+const updateWishlistItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {
+    user
+  } = <IGetWishlistsState>req.state
+  const {
+    id
+  } = req.params
+  const {
+    name,
+  } = <IUpdateWishlistItem>req.body
+  // find item
+  let item
+  try {
+    item = await db.WishlistItem.findOne({
+      where: { id },
+      include: [
+        {
+          model: db.Wishlist,
+          where: {
+            user: user.id
+          }
+        }
+      ]
+    })
+  } catch (err) {
+    const body = base(0, err.message, 0, ERROR_CODES.DB_QUERY)
+    res.send(body)
+    return
+  }
+  if (!item) {
+    const body = base(0, 'Item not found', 0, ERROR_CODES.NOT_FOUND)
+    res.send(body)
+    return
+  }
+  item.name = name || item.name
+  await item.save()
+  const body = base(item)
+  res.send(body)
+}
+
 export default {
   getWishlists,
   getWishlist,
   createWishlist,
   createWishlistItem,
+  updateWishlist,
+  updateWishlistItem
 }

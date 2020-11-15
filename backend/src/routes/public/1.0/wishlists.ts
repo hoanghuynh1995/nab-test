@@ -25,6 +25,16 @@ router
     userController.auth,
     wishlistController.createWishlistItem
   )
+  .put('/:id',
+    validatorController.validate(joiObjs.wishlist.edit, 'body'),
+    userController.auth,
+    wishlistController.updateWishlist
+  )
+  .put('/wishlist_items/:id',
+    validatorController.validate(joiObjs.wishlist.editItem, 'body'),
+    userController.auth,
+    wishlistController.updateWishlistItem
+  )
 
 export default router
 
