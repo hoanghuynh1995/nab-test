@@ -5,3 +5,4 @@ tmp/
 build/
 package-lock.json
 /tsconfig.json
+dist
