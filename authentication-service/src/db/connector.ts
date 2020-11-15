@@ -11,7 +11,6 @@ const {
     sync,
   }
 } = config
-console.log('config', config)
 
 const sequelize = new Sequelize(database, null, null, {
   dialect: 'postgres',

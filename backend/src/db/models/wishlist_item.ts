@@ -2,39 +2,32 @@ import * as Sequelize from 'sequelize'
 const DataTypes = Sequelize.DataTypes
 
 import connector from '../connector'
-import WishListItemModel from './wishlist_item'
 
-class WishlistModel extends Sequelize.Model {
+class WishlistItemModel extends Sequelize.Model {
   id?: number;
   user: string;
   title: string;
   fullname: string;
 }
 
-WishlistModel.init({
+WishlistItemModel.init({
   id: {
     autoIncrement: true,
     type: DataTypes.INTEGER(),
     allowNull: false,
     primaryKey: true
   },
-  user: {
+  wishlist: {
     type: DataTypes.INTEGER(),
     allowNull: false,
   },
-  title: {
+  name: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  description: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
 }, {
   sequelize: connector,
-  tableName: 'wishlists'
+  tableName: 'wishlist_items'
 })
 
-WishlistModel.hasMany(WishListItemModel)
-
-export default WishlistModel
+export default WishlistItemModel

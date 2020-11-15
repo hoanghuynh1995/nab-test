@@ -1,20 +1,18 @@
-import * as request from 'request-promise'
+import request from 'request-promise'
 
-import { auth } from '../types/services'
+import { Auth } from '../types/services'
 
 import config from '../config'
 
 const AUTH_URL = config.services.auth.url
 
-const verifyToken = (data: auth.Request): Promise<auth.Response> => {
-  return request(`${AUTH_URL}/priv/v1/users/verify_token`, {
+export const verifyToken = (data: Auth.VerifyTokenRequest): Promise<Auth.VerifyTokenResponse> => {
+  return request({
+    uri: `${AUTH_URL}/priv/v1/users/verify_token`,
     method: 'POST',
     body: {
       token: data.token,
-    }
+    },
+    json: true,
   })
-}
-
-export default {
-  verifyToken,
 }

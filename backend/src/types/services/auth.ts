@@ -1,12 +1,18 @@
 /**
  * Types for auth service
  */
-
-export interface Request {
+interface Response {
+  error: {
+    status: number,
+    message: string
+  },
+  data: unknown
+}
+export interface VerifyTokenRequest {
   token: string
 }
 
-export interface Response {
+export interface VerifyTokenData {
   id: string,
   email: string,
   fullname: string,
@@ -14,4 +20,7 @@ export interface Response {
   updatedAt: Date,
   iat: number,
   exp: number
+}
+export interface VerifyTokenResponse extends Response {
+  data: VerifyTokenData
 }

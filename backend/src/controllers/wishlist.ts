@@ -1,38 +1,36 @@
 import { Request, Response, NextFunction } from 'express'
 import base from '../entities/base'
+import { error_codes as ERROR_CODES } from '../constants'
+import { Auth } from '../types/services'
+import db from '../db'
 
-interface IMw1State {
-  x: number
+interface IGetWishlistsState {
+  user: Auth.VerifyTokenData
 }
-interface IMw2State extends IMw1State {
-  y: number,
-}
-const testmw1 = (req: Request, res: Response, next: NextFunction) => {
-  console.log('testMw')
-  const state: IMw1State = {
-    x: 1
+const getWishlists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {
+    user
+  } = <IGetWishlistsState>req.state
+  let wishlists
+  try {
+    wishlists = await db.Wishlist.findAll({
+      where: {
+        user: user.id
+      },
+      include: [{
+        model: db.WishlistItem
+      }],
+      raw: true
+    })
+  } catch (err) {
+    const body = base(0, err.message, 0, ERROR_CODES.DB_QUERY)
+    res.send(body)
+    return
   }
-  req.state = state
-  next()
-}
-const testmw2 = (req: Request, res: Response, next: NextFunction) => {
-  const currentState = <IMw1State>req.state
-  const state: IMw2State = {
-    ...currentState,
-    y: 2,
-  }
-  req.state = state
-  next()
-}
-
-const testmw3 = (req: Request, res: Response, next: NextFunction) => {
-  const currentState = <IMw2State>req.state
-  console.log('state3', currentState)
-  res.send(base({ res: 1 }))
+  const body = base(wishlists)
+  res.send(body)
 }
 
 export default {
-  testmw1,
-  testmw2,
-  testmw3,
+  getWishlists,
 }

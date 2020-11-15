@@ -1,13 +1,13 @@
 import { Router } from 'express'
 const router = Router()
 
+import userController from '../../../controllers/user'
 import wishlistController from '../../../controllers/wishlist'
 
 router
   .get('/',
-    wishlistController.testmw1,
-    wishlistController.testmw2,
-    wishlistController.testmw3,
+    userController.auth,
+    wishlistController.getWishlists
   )
 
 export default router

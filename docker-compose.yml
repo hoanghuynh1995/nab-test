@@ -1,11 +1,47 @@
 version: '3'
 services: 
-  backend:
+  auth_db:
+    image: 'postgres:latest'
+    container_name: 'wishlist_demo_auth_db'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
+      POSTGRES_DB: wishlist_demo_auth
+    ports:
+      - '54321:5432'
+  auth_service:
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    image: 'wishlist_demo_auth'
+    container_name: 'wishlist_demo_auth'
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    env_file: ./authentication-service/.env
+    environment:
+      PG_URL: db
+      PG_USER: postgres
+      PG_PASSWORD: SrHbgm2PbLDnXBNN
+      PG_DATABASE: wishlist_demo
+    depends_on:
+      - auth_db
+
+  app_db:
+    image: 'postgres:latest'
+    container_name: 'wishlist_demo_app_db'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
+      POSTGRES_DB: wishlist_demo_app
+    ports:
+      - '54320:5432'
+  app:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: 'nab_test_backend'
-    container_name: 'nab_test_backend'
+    image: 'wishlist_demo_app'
+    container_name: 'wishlist_demo_app'
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -14,20 +50,10 @@ services:
       PG_URL: db
       PG_USER: postgres
       PG_PASSWORD: SrHbgm2PbLDnXBNN
-      PG_DATABASE: nab_test
-
+      PG_DATABASE: wishlist_demo_app
     depends_on:
-      - db
-
-  db:
-    image: 'postgres:latest'
-    container_name: 'nab_test_db'
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
-      POSTGRES_DB: nab_test
-    ports:
-      - '54320:5432'
+      - app_db
+      - auth_service
 
 volumes:
   .:

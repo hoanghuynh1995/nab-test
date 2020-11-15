@@ -8,6 +8,7 @@ const {
     database,
     password,
     port,
+    sync,
   }
 } = config
 
@@ -22,6 +23,9 @@ const sequelize = new Sequelize(database, null, null, {
 })
 sequelize.authenticate().then(() => {
   console.log('Database connection has been established successfully.')
+  if (sync === 'true') {
+    sequelize.sync({ alter: true })
+  }
 }).catch((err) => {
   console.error('Unable to connect to the database:', err)
   process.exit(-1)

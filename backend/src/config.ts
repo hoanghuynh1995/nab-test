@@ -10,6 +10,7 @@ export default {
     password: process.env.PG_PASSWORD,
     database: process.env.PG_DATABASE,
     port: process.env.PG_PORT,
+    sync: process.env.DB_SYNC,
   },
   services: {
     auth: {

@@ -101,7 +101,8 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction): Pro
     res.send(body)
     return
   }
-  res.send(response)
+  const body = base(response)
+  res.send(body)
 }
 
 export default {

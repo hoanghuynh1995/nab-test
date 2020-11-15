@@ -1,2 +1,2 @@
-export * as auth from './auth'
+export * as Auth from './auth'
 
