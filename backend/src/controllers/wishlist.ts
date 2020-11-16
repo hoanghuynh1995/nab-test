@@ -225,11 +225,13 @@ const updateWishlistItem = async (req: Request, res: Response, next: NextFunctio
   res.send(body)
 }
 
-export default {
-  getWishlists,
-  getWishlist,
-  createWishlist,
-  createWishlistItem,
-  updateWishlist,
-  updateWishlistItem
+class Wishlist {
+  getWishlists = getWishlists
+  getWishlist = getWishlist
+  createWishlist = createWishlist
+  createWishlistItem = createWishlistItem
+  updateWishlist = updateWishlist
+  updateWishlistItem = updateWishlistItem
 }
+
+export default new Wishlist() // use class for unit testing

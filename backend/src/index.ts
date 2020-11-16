@@ -37,3 +37,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 })
 
 app.listen(port, () => console.log('Started server at port: ' + port))
+
+export default app // for test

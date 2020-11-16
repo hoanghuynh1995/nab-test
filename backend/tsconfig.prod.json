@@ -3,7 +3,8 @@
     "outDir": "./dist",
     "lib": [
       "es5",
-      "es6"
+      "es6",
+      "DOM"
     ],
     "target": "es6",
     "module": "commonjs",
