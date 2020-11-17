@@ -1,49 +1,27 @@
-import { beforeEach } from 'mocha'
-import * as chai from 'chai'
-import sinon from 'sinon'
-import proxyquire from 'proxyquire'
+const { beforeEach } = require('mocha')
+const chai = require('chai')
+const sinon = require('sinon')
+const proxyquire = require('proxyquire')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
-const expect = chai.expect
+const { expect } = chai
 
 // proxyquire
 const _db = {
   Wishlist: {
+    create: async data => ({
+      id: Math.floor(Math.random() * 1000),
+      ...data,
+    }),
   }
 }
 const wishlistController = proxyquire('../../dist/controllers/wishlist', {
-  '../db': _db
-})
+  '../db': { default: _db }
+}).default
 
-let token
-describe('Get Token', () => {
-
-  describe('Signup', async () => {
-    const payload = {
-      email: 'test@gmail.com',
-      password: '123456',
-      fullname: 'Test Name'
-    }
-    it('Empty email', async done => {
-      const errPayload = {
-        ...payload,
-        email: undefined,
-      }
-      console.log('errPayload', errPayload)
-      const wistlists = await chai.request(server).get('/v1/wishlists')
-      console.log(wistlists)
-      done()
-    })
-  })
-  it('/login', async done => {
-    console.log('login')
-    token = 'token'
-    done()
-  })
-})
 describe('Wishlist', () => {
-  describe('getWishlists', async () => {
+  describe('createWishlist', async () => {
     let req, res
     beforeEach(done => {
       req = {
@@ -51,6 +29,10 @@ describe('Wishlist', () => {
           user: {
             id: 1
           }
+        },
+        body: {
+          title: 'title',
+          description: 'description',
         }
       }
       res = {
@@ -59,17 +41,45 @@ describe('Wishlist', () => {
       _db.Wishlist.findAll = sinon.stub()
       done()
     })
-    it('no wishlish found', async done => {
-      req.state.user = -1
-      res.send.calledOnce()
-      _db.Wishlist.findAll.calledOnce()
-      done()
+    it('success create wishlist', async () => {
+      try {
+        await wishlistController.createWishlist(req, res)
+      } catch (err) {
+        expect(err).to.be.emptys
+        return
+      }
+      expect(res.send.withArgs(sinon.match.hasNested('data.id')).calledOnce).to.be.true
     })
   })
-  it('GET: /wishlists', async done => {
-    console.log('GET: /wishlists', {
-      token
+  describe('getWishlists', async () => {
+    let req, res
+    beforeEach(done => {
+      req = {
+        state: {
+          user: {
+            id: 1
+          }
+        },
+        query: {}
+      }
+      res = {
+        send: sinon.stub()
+      }
+      _db.Wishlist.findAll = sinon.stub()
+      done()
     })
-    done()
+    it('no wishlish found', async () => {
+      req.state.user = -1
+      try {
+        await wishlistController.getWishlists(req, res)
+      } catch (err) {
+        expect(err).to.be.empty
+        return
+      }
+      expect(res.send.calledOnce).to.be.true
+      expect(_db.Wishlist.findAll.calledOnce).to.be.true
+      expect(res.send.withArgs(sinon.match.hasNested('error.status', 1)).calledOnce).to.be.true
+      expect(res.send.withArgs(sinon.match.has('data', sinon.match.falsy)).calledOnce).to.be.true
+    })
   })
 })

@@ -4,8 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "pretest": "tsc --p ./tsconfig.json",
-    "test": "./node_modules/.bin/mocha dist/test/integration/",
+    "test": "./node_modules/.bin/mocha ./test/*",
     "restart": "pm2 restart app",
     "compile": "tsc && node dist/index",
     "dev": "nodemon -e ts --exec \"npm run compile\"",
