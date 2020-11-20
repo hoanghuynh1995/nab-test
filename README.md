@@ -10,9 +10,13 @@
 2. **wishlist_demo_app:** database for App service
 ## Run application
 * Clone sample configuration files:
-> cd backend; cp .env_sample .env; cd ../authentication-service; cp .env_sample .env; cd ..
+```
+> cp .env_sample .env
+```
 * Start all neccessary services as containers. There are four services: Authentication database, authentication service, app database, app service.
+```
 > docker-compose up
+```
 ***
 ## APIs
 ### Authentication Service
@@ -100,3 +104,22 @@ Sample
     "name": "Item 1"
 }'`
 
+## Test
+### **Backend service**
+#### Requires:
+Start necessary services
+```
+> docker-compose up -d auth_db app_db auth_service
+```
+Have environment config for backend service if not exist
+```
+> cp backend/.env_sample backend/.env
+``` 
+#### Run test cases
+```
+> cd backend
+```
+```
+> npm test
+```
+If you have any connection issue, wait for few seconds for other services to be started

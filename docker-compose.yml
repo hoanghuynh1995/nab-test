@@ -4,9 +4,9 @@ services:
     image: 'postgres:latest'
     container_name: 'wishlist_demo_auth_db'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
-      POSTGRES_DB: wishlist_demo_auth
+      POSTGRES_USER: ${AUTH_DB_USERNAME}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_DATABASE}
     ports:
       - '54321:5432'
     networks:
@@ -19,16 +19,18 @@ services:
     image: 'wishlist_demo_auth'
     container_name: 'wishlist_demo_auth'
     ports:
-      - 8081:8081
+      - ${AUTH_PORT}:${AUTH_PORT}
     restart: unless-stopped
-    env_file: ./authentication-service/.env
+    # env_file: ./authentication-service/.env
     environment:
+      PORT: ${AUTH_PORT}
       PG_URL: auth_db
-      PG_USER: postgres
-      PG_PASSWORD: SrHbgm2PbLDnXBNN
-      PG_DATABASE: wishlist_demo_auth
-      PG_PORT: 5432
-      DB_SYNC: 'true'
+      PG_USER: ${AUTH_DB_USERNAME}
+      PG_PASSWORD: ${AUTH_DB_PASSWORD}
+      PG_DATABASE: ${AUTH_DB_DATABASE}
+      PG_PORT: ${AUTH_DB_DATABASE_PORT}
+      DB_SYNC: ${AUTH_DB_SYNC}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     depends_on:
       - auth_db
     networks:
@@ -41,9 +43,9 @@ services:
     image: 'postgres:latest'
     container_name: 'wishlist_demo_app_db'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: SrHbgm2PbLDnXBNN
-      POSTGRES_DB: wishlist_demo_app
+      POSTGRES_USER: ${APP_DB_USERNAME}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+      POSTGRES_DB: ${APP_DB_DATABASE}
     ports:
       - '54320:5432'
     networks:
@@ -56,17 +58,18 @@ services:
     image: 'wishlist_demo_app'
     container_name: 'wishlist_demo_app'
     ports:
-      - 8080:8080
+      - ${APP_PORT}:${APP_PORT}
     restart: unless-stopped
-    env_file: ./backend/.env
+    # env_file: ./backend/.env
     environment:
+      PORT: ${APP_PORT}
       PG_URL: app_db
-      PG_USER: postgres
-      PG_PASSWORD: SrHbgm2PbLDnXBNN
-      PG_DATABASE: wishlist_demo_app
-      PG_PORT: 5432
-      DB_SYNC: 'true'
-      AUTH_URL: http://auth_service:8081
+      PG_USER: ${APP_DB_USERNAME}
+      PG_PASSWORD: ${APP_DB_PASSWORD}
+      PG_DATABASE: ${APP_DB_DATABASE}
+      PG_PORT: ${APP_DB_DATABASE_PORT}
+      DB_SYNC: ${AUTH_DB_SYNC}
+      AUTH_URL: http://auth_service:${AUTH_PORT}
     depends_on:
       - app_db
       - auth_service
