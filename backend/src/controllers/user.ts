@@ -13,15 +13,24 @@ const auth = async (req: Request, res: Response, next: NextFunction): Promise<vo
   }
   let response
   try {
-    response = (await authService.verifyToken({ token })).data
+    response = await authService.verifyToken({ token })
   } catch (err) {
     console.error('verifyToken', err)
     const body = base(null, 'Invalid token', 0, ERROR_CODES.THIRD_PARTY)
     res.send(body)
     return
   }
+  if (response.error.status !== 1) {
+    console.log({
+      token,
+      response,
+    })
+    const body = base(null, 'Invalid token', 0, ERROR_CODES.THIRD_PARTY)
+    res.send(body)
+    return
+  }
   req.state = {
-    user: response
+    user: response.data
   }
   next()
 }

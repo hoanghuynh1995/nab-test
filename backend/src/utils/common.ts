@@ -34,4 +34,4 @@ export const getFilterAndPaging = query => {
     limit: Number(limit),
     sort,
   }
-}
+};

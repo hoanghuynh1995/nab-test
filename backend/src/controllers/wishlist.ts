@@ -6,6 +6,7 @@ import {
 } from '../types'
 import db from '../db'
 import { common as commonUtils } from '../utils'
+import { use } from 'chai'
 
 interface IGetWishlistsState {
   user: ServiceTypes.Auth.VerifyTokenData
@@ -175,6 +176,11 @@ const updateWishlist = async (req: Request, res: Response, next: NextFunction): 
     if (res[0] === 1) updatedWishlist = res[1][0]
   } catch (err) {
     const body = base(0, err.message, 0, ERROR_CODES.DB_QUERY)
+    res.send(body)
+    return
+  }
+  if (!updatedWishlist) {
+    const body = base(0, 'wishlist not found', 0, ERROR_CODES.NOT_FOUND)
     res.send(body)
     return
   }

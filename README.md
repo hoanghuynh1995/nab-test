@@ -9,8 +9,6 @@
 1. **wishlist_demo_auth:** database for Authentication service
 2. **wishlist_demo_app:** database for App service
 ## Run application
-* Install node_modules for services:
-> cd backend; npm i; cd ../authentication-service; npm i; cd ..
 * Clone sample configuration files:
 > cd backend; cp .env_sample .env; cd ../authentication-service; cp .env_sample .env; cd ..
 * Start all neccessary services as containers. There are four services: Authentication database, authentication service, app database, app service.
